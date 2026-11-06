@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Súbete · Prototipo</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef9ff;--card:#fff;--ink:#07324a;--mute:#527a90;--line:#d3ecf9;--sky:#38bdf8;--sky2:#0284c7;--soft:#e0f3fd;--ok:#0f9d6b;--bad:#c2410c;--on:#fff;--sh:0 8px 24px rgba(2,132,199,.12);--hero:linear-gradient(160deg,#a5e0fc,#38bdf8 60%,#0ea5e9);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#06202e;--card:#0d3248;--ink:#e3f4fc;--mute:#92bccf;--line:#1a4962;--sky:#38bdf8;--sky2:#7dd3fc;--soft:#12425d;--on:#04202e;--ok:#4ade80;--bad:#fb923c;--sh:0 8px 24px rgba(0,0,0,.35);--hero:linear-gradient(160deg,#0c4a6e,#0369a1 60%,#0284c7);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#06202e;--card:#0d3248;--ink:#e3f4fc;--mute:#92bccf;--line:#1a4962;--sky:#38bdf8;--sky2:#7dd3fc;--soft:#12425d;--on:#04202e;--ok:#4ade80;--bad:#fb923c;--sh:0 8px 24px rgba(0,0,0,.35);--hero:linear-gradient(160deg,#0c4a6e,#0369a1 60%,#0284c7);color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 "Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+.app{max-width:460px;margin:0 auto;padding:0 14px 110px}
+.hero{background:var(--hero);margin:0 -14px;padding:22px 18px 70px;border-radius:0 0 32px 32px;color:#fff}
+.hero h1{margin:0;font-size:32px;font-weight:800;letter-spacing:-1.2px;display:flex;align-items:center;gap:10px}
+.hero h1 i{display:grid;place-items:center;width:40px;height:40px;border-radius:13px;background:#fff;font-style:normal;font-size:22px}
+.hero p{margin:6px 0 0;opacity:.95;font-size:15px}
+.card{background:var(--card);border-radius:22px;padding:16px;margin-top:14px;box-shadow:var(--sh)}
+.card.up{margin-top:-52px}
+h2{margin:0 0 8px;font-size:17px;font-weight:800;letter-spacing:-.3px}
+label{display:block;font-size:12.5px;font-weight:600;color:var(--mute);margin-bottom:5px}
+select,input{width:100%;padding:12px 13px;border-radius:14px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:inherit}
+.row{display:flex;gap:10px}.row>*{flex:1;min-width:0}
+.chips{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap}
+.chip{padding:7px 13px;border-radius:20px;border:0;background:var(--soft);color:var(--sky2);font:inherit;font-weight:600;font-size:13px;cursor:pointer}
+.chip.on{background:var(--sky2);color:#fff}
+.btn{width:100%;padding:15px;border:0;border-radius:16px;background:var(--sky2);color:#fff;font:inherit;font-weight:800;font-size:16px;cursor:pointer;margin-top:12px;box-shadow:0 6px 16px rgba(2,132,199,.3)}
+:root[data-theme="dark"] .btn:not(.ghost),:root:not([data-theme="light"]) .btn:not(.ghost){color:var(--on)}
+@media (prefers-color-scheme:light){.btn:not(.ghost){color:#fff!important}}
+.btn:disabled{opacity:.45;box-shadow:none;cursor:not-allowed}
+.btn.ghost{background:var(--soft);color:var(--sky2);box-shadow:none}
+.btn.sm{width:auto;padding:9px 16px;margin:0;font-size:14px;border-radius:12px}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+.map{background:var(--soft);border-radius:18px;overflow:hidden;margin-top:8px}
+.map svg{display:block;width:100%;height:auto}
+.live{display:flex;align-items:center;gap:8px;font-weight:800}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--ok);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.3}}
+@media (prefers-reduced-motion:reduce){.dot{animation:none}}
+.eta{font-size:38px;font-weight:800;letter-spacing:-1.5px;color:var(--sky2);line-height:1.1;margin-top:10px}
+.meta{display:flex;justify-content:space-between;gap:8px;color:var(--mute);font-size:13px;margin-top:6px}
+.bar{height:9px;border-radius:9px;background:var(--soft);margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--sky);border-radius:9px}
+.item{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;padding:13px;border-radius:16px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font:inherit;margin-top:9px;text-align:left}
+button.item{cursor:pointer}
+.item.on{border-color:var(--sky2);background:var(--soft)}
+.item b{font-size:19px}
+.tag{font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;background:var(--soft);color:var(--sky2);white-space:nowrap}
+.tag.low{background:#fde8d8;color:#9a3412}
+.bus{display:grid;grid-template-columns:1fr 1fr 16px 1fr 1fr;gap:6px;justify-items:center;padding:12px;border-radius:20px;border:2px solid var(--line);background:var(--bg);margin-top:8px}
+.seat{width:100%;max-width:46px;aspect-ratio:1;border-radius:11px 11px 6px 6px;border:1.5px solid var(--sky);background:var(--card);color:var(--ink);font:600 12px "Plus Jakarta Sans",sans-serif;cursor:pointer}
+.seat.busy{background:var(--line);border-color:var(--line);color:var(--mute);cursor:not-allowed;opacity:.6}
+.seat.sel{background:var(--sky2);border-color:var(--sky2);color:#fff}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--mute);margin-top:8px;flex-wrap:wrap}
+.sum div{display:flex;justify-content:space-between;padding:4px 0}
+.sum .tot{border-top:1.5px solid var(--line);margin-top:6px;padding-top:9px;font-weight:800;font-size:19px}
+.pay{display:flex;align-items:center;gap:10px;padding:13px;border:1.5px solid var(--line);border-radius:16px;margin-top:9px;cursor:pointer}
+.pay input{width:auto;accent-color:var(--sky2)}
+.pay:has(input:checked){border-color:var(--sky2);background:var(--soft)}
+.ticket{border:2px dashed var(--sky);border-radius:18px;padding:14px;margin-top:10px;background:var(--soft)}
+.ticket .code{font-size:22px;font-weight:800;letter-spacing:2px;color:var(--sky2)}
+.note{font-size:12px;color:var(--mute);text-align:center;margin-top:14px}
+nav{position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));max-width:436px;margin:0 auto;background:var(--card);border-radius:26px;padding:6px;box-shadow:0 10px 30px rgba(2,132,199,.25);display:flex;gap:2px}
+nav button{flex:1;border:0;background:none;color:var(--mute);font:inherit;font-weight:600;font-size:11px;padding:8px 2px;border-radius:20px;cursor:pointer}
+nav button.on{background:var(--sky2);color:#fff}
+nav span{display:block;font-size:19px}
+.ok{color:var(--ok);font-weight:800}
+.err{color:var(--bad);font-size:13px;margin-top:6px}
+.heat{overflow-x:auto;margin-top:8px}
+.heat table{border-collapse:separate;border-spacing:4px;width:100%;min-width:300px;text-align:center;font-size:12px}
+.heat th{font-weight:600;color:var(--mute);padding:2px}
+.heat td{border-radius:10px;padding:11px 2px;font-weight:800}
+.grad{height:10px;border-radius:10px;background:linear-gradient(90deg,hsl(200 90% 92%),hsl(205 85% 55%),hsl(215 80% 28%),hsl(12 85% 55%));margin-top:10px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="hero">
+<h1><i>🚌</i>Súbete</h1>
+<p>Mira dónde va tu bus, asegura tu asiento y llega puntual.</p>
+</div>
+
+<div class="card up">
+<div class="row">
+<div><label for="comuna">Salgo desde</label>
+<select id="comuna"><option value="arauco">Arauco</option><option value="cura">Curanilahue</option><option value="spp">San Pedro de la Paz</option></select></div>
+<div><label for="paradero">Mi paradero</label><select id="paradero"></select></div>
+</div>
+<label for="dest" style="margin-top:10px">Voy a</label>
+<input id="dest" list="lugares" value="UNAB" placeholder="Escribe cualquier destino" autocomplete="off">
+<datalist id="lugares"><option value="UNAB"><option value="UCSC"><option value="Universidad de Concepción"><option value="Hospital Regional"><option value="Mall del Centro"><option value="Terminal Collao"><option value="Centro de Concepción"><option value="Chiguayante"></datalist>
+<div class="chips" id="qd"></div>
+</div>
+
+<!-- MAPA -->
+<section id="t-mapa">
+<div class="card">
+<div class="live"><span class="dot"></span>Bus en vivo · <span id="busid"></span></div>
+<div class="map"><svg id="svg" viewBox="0 0 340 280" role="img" aria-label="Mapa con la ubicación del bus"></svg></div>
+<div class="eta" id="eta">–</div>
+<div class="meta"><span id="estado"></span><span id="ocup"></span></div>
+<div class="bar"><i id="prog" style="width:0"></i></div>
+<div class="meta"><span id="orig"></span><span id="destl"></span></div>
+<button class="btn" id="goReserva">Reservar cupo en este bus</button>
+</div>
+</section>
+
+<!-- RESERVA -->
+<section id="t-reserva" hidden>
+<div class="card"><h2>Horarios de hoy</h2><div id="trips"></div></div>
+<div class="card"><h2>Elige tu asiento</h2><div id="seatwrap"></div></div>
+<div class="card sum">
+<div><span>Pasaje base</span><span id="pBase"></span></div>
+<div><span>Cupo asegurado</span><span id="pExtra"></span></div>
+<div class="tot"><span>Total por viaje</span><span id="pTot"></span></div>
+<button class="btn" id="goPago" disabled>Continuar al pago</button>
+</div>
+</section>
+
+<!-- CARPOOL -->
+<section id="t-carpool" hidden>
+<div class="card"><h2>Carpooling</h2>
+<p style="margin:0;color:var(--mute)">Comparte auto con otros estudiantes de tu ruta y reparte el costo.</p>
+<div id="rides"></div></div>
+<div class="card"><h2>Ofrecer mi auto</h2>
+<div class="row"><div><label for="ot">Hora de salida</label><input id="ot" type="time" value="07:00"></div>
+<div><label for="os">Asientos libres</label><select id="os"><option>1</option><option>2</option><option selected>3</option><option>4</option></select></div></div>
+<label for="op" style="margin-top:8px">Aporte por persona ($)</label><input id="op" type="number" value="1500" inputmode="numeric">
+<button class="btn ghost" id="offer">Publicar mi viaje</button></div>
+</section>
+
+<!-- OCUPACION -->
+<section id="t-ocup" hidden>
+<div class="card"><h2>Buses ahora</h2><div id="live"></div></div>
+<div class="card"><h2>Mapa de calor de ocupación</h2>
+<p style="margin:0;color:var(--mute)" id="hsub"></p>
+<div class="heat" id="heat"></div>
+<div class="grad"></div>
+<div class="meta"><span>Vacío</span><span>Normal</span><span>Lleno</span><span>Repleto</span></div>
+<p id="best" class="ok" style="margin:12px 0 0"></p></div>
+</section>
+
+<!-- PAGO -->
+<section id="t-pago" hidden>
+<div class="card"><h2>Resumen</h2><p id="resumen" style="margin:0;color:var(--mute)"></p></div>
+<div class="card"><h2>Método de pago</h2>
+<label class="pay"><input type="radio" name="m" value="Tarjeta" checked> 💳 Tarjeta de débito o crédito</label>
+<label class="pay"><input type="radio" name="m" value="Transferencia"> 🏦 Transferencia</label>
+<label class="pay"><input type="radio" name="m" value="Saldo Súbete"> 👛 Saldo en la app</label>
+<div id="cardf" style="margin-top:10px">
+<label for="cn">Número de tarjeta</label><input id="cn" inputmode="numeric" placeholder="4000 0000 0000 0000" maxlength="19">
+<div class="row" style="margin-top:8px"><div><label for="ce">Vence</label><input id="ce" placeholder="MM/AA" maxlength="5"></div><div><label for="cc">CVV</label><input id="cc" placeholder="123" maxlength="3" inputmode="numeric"></div></div>
+</div>
+<div class="err" id="perr" hidden></div>
+<button class="btn" id="pagar">Pagar</button>
+<p class="note">Prototipo de validación: no se realiza ningún cobro real.</p></div>
+</section>
+
+<!-- MIS CUPOS -->
+<section id="t-cupos" hidden>
+<div id="lista"></div>
+<div class="card"><h2>Lista de espera del piloto</h2>
+<p style="color:var(--mute);margin:0 0 10px">Déjanos tus datos y te avisamos cuando abra tu ruta.</p>
+<label for="wn">Nombre</label><input id="wn" autocomplete="name">
+<label for="ww" style="margin-top:8px">WhatsApp o correo</label><input id="ww">
+<button class="btn ghost" id="wait">Unirme a la lista de espera</button>
+<div class="ok" id="wok" hidden style="margin-top:8px">¡Listo! Te avisaremos por tu ruta y horario.</div></div>
+</section>
+</div>
+
+<nav>
+<button class="on" data-t="mapa"><span>🗺️</span>Mapa</button>
+<button data-t="reserva"><span>🎟️</span>Reservar</button>
+<button data-t="carpool"><span>🚗</span>Carpool</button>
+<button data-t="ocup"><span>🔥</span>Ocupación</button>
+<button data-t="cupos"><span>✅</span>Mis cupos</button>
+</nav>
+
+<script>
+const BASE=1500,EXTRA=100,$=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const money=n=>"$"+Number(n).toLocaleString("es-CL");
+const R={
+ arauco:{n:"Arauco",min:80,stops:["Terminal Arauco","Lota","Coronel"],bus:"AR"},
+ cura:{n:"Curanilahue",min:95,stops:["Terminal Curanilahue","Carampangue","Coronel"],bus:"CU"},
+ spp:{n:"San Pedro de la Paz",min:35,stops:["Terminal San Pedro","Huertos Familiares","Boca Sur"],bus:"SP"}
+};
+const FR=[0,.3,.62,.9],TIMES=["06:30","07:00","07:30","08:00","08:30"];
+let S={comuna:"arauco",dest:"UNAB",stop:1,p:0,trip:null,seat:null,res:[],n:0,rides:null};
+const svg=$("#svg");
+svg.innerHTML=`<path id="rt" d="M30 245 C90 230 55 165 130 150 S240 120 215 70 S290 38 312 36" fill="none" stroke="var(--sky)" stroke-width="7" stroke-linecap="round"/>
+<g id="stops"></g><g id="bus"><circle r="16" fill="var(--sky2)"/><text y="6" text-anchor="middle" font-size="17">🚌</text></g>`;
+const path=$("#rt"),L=path.getTotalLength();
+const hash=k=>{let h=7;for(const c of k)h=(h*31+c.charCodeAt(0))>>>0;return h};
+const occ=(c,t,i)=>{const base=[78,92,80,62,46][TIMES.indexOf(t)]||60,mid=[-8,6,10,-4][i]||0;return Math.max(18,Math.min(99,base+mid+(hash(c+t+i)%17)-8))};
+const lvl=o=>o>=90?"Repleto":o>=70?"Casi lleno":o>=45?"Normal":"Con espacio";
+const dname=()=>S.dest.trim()||"mi destino";
+
+function drawStops(){
+ const r=R[S.comuna],names=[...r.stops,dname()];
+ $("#stops").innerHTML=FR.map((f,i)=>{const pt=path.getPointAtLength(f*L),left=pt.x>200;
+  return `<circle cx="${pt.x}" cy="${pt.y}" r="${i===S.stop?9:6}" fill="${i===S.stop?'var(--sky2)':'var(--card)'}" stroke="var(--sky2)" stroke-width="3"/>
+  <text x="${pt.x+(left?-14:14)}" y="${pt.y+4}" text-anchor="${left?'end':'start'}" font-size="11" font-weight="700" fill="var(--ink)">${names[i].slice(0,22)}</text>`}).join("");
+ $("#paradero").innerHTML=r.stops.map((n,i)=>`<option value="${i}" ${i===S.stop?"selected":""}>${n}</option>`).join("");
+ $("#orig").textContent=r.stops[0];$("#destl").textContent=dname();
+}
+function tick(){
+ S.p+=.004;if(S.p>=1){S.p=0;S.n++}
+ const pt=path.getPointAtLength(S.p*L);$("#bus").setAttribute("transform",`translate(${pt.x},${pt.y})`);
+ $("#prog").style.width=(S.p*100)+"%";
+ const left=FR[S.stop]-S.p,r=R[S.comuna];
+ $("#busid").textContent="Bus "+r.bus+"-"+(12+S.n%4);
+ if(left>0){const m=Math.max(1,Math.round(left*r.min));$("#eta").textContent="Llega en "+m+" min";$("#estado").textContent=m<=5?"Ya viene, prepárate":"En camino a tu paradero"}
+ else{$("#eta").textContent="Ya pasó por tu paradero";$("#estado").textContent="Próximo bus en ~20 min"}
+ const o=occ(S.comuna,TIMES[S.n%5],Math.min(3,Math.floor(S.p*4)));
+ $("#ocup").textContent=`${lvl(o)} · ${Math.round(o*.4)}/40`;
+}
+const busySeats=key=>{let h=hash(key);const set=new Set();let k=0;while(set.size<14+(h%10)&&k++<200){h=(h*1103515245+12345)>>>0;set.add(1+h%40)}return set};
+function drawTrips(){
+ $("#trips").innerHTML=TIMES.map(t=>{const free=40-busySeats(S.comuna+S.dest+t).size;
+ return `<button class="item ${S.trip===t?'on':''}" data-t="${t}"><span><b>${t}</b><br><small style="color:var(--mute)">${R[S.comuna].n} → ${dname()}</small></span><span class="tag ${free<=10?'low':''}">${free} cupos libres</span></button>`}).join("");
+ $$("#trips .item").forEach(b=>b.onclick=()=>{S.trip=b.dataset.t;S.seat=null;drawTrips();drawSeats();upd()});
+}
+function drawSeats(){
+ if(!S.trip){$("#seatwrap").innerHTML='<p style="color:var(--mute);margin:0">Primero elige un horario.</p>';return}
+ const busy=busySeats(S.comuna+S.dest+S.trip);let h='<div class="bus">';
+ for(let r=0;r<10;r++)for(let c=0;c<4;c++){if(c===2)h+="<span></span>";const n=r*4+c+1;
+  h+=`<button class="seat ${busy.has(n)?'busy':''} ${S.seat===n?'sel':''}" data-n="${n}" ${busy.has(n)?'disabled':''} aria-label="Asiento ${n}">${n}</button>`}
+ $("#seatwrap").innerHTML=h+'</div><div class="legend"><span>⬜ Libre</span><span>🟦 Tu asiento</span><span>▫️ Ocupado</span></div>';
+ $$(".seat:not(.busy)").forEach(b=>b.onclick=()=>{S.seat=+b.dataset.n;drawSeats();upd()});
+}
+function upd(){$("#pBase").textContent=money(BASE);$("#pExtra").textContent=money(EXTRA);$("#pTot").textContent=money(BASE+EXTRA);$("#goPago").disabled=!(S.trip&&S.seat)}
+
+const NAMES=[["Camila R.","Hyundai Accent · gris"],["Matías P.","Suzuki Swift · rojo"],["Valentina S.","Kia Morning · blanco"]];
+function initRides(){S.rides=NAMES.map((d,i)=>({d:d[0],car:d[1],t:["06:45","07:15","07:50"][i],seats:[3,2,1][i],price:[1200,1500,1800][i],mine:false,joined:false}))}
+function drawRides(){
+ if(!S.rides)initRides();
+ $("#rides").innerHTML=S.rides.map((r,i)=>`<div class="item"><span><b>${r.t}</b> · ${r.mine?"Tú":r.d}<br><small style="color:var(--mute)">${r.mine?"Tu auto":r.car} · ${R[S.comuna].n} → ${dname()}</small><br><small>${money(r.price)} por persona</small></span>
+ <span style="text-align:right"><span class="tag ${r.seats<=1?'low':''}">${r.seats} ${r.seats===1?"asiento":"asientos"}</span><br>${r.mine?"":`<button class="btn sm" style="margin-top:8px" data-i="${i}" ${r.seats<1||r.joined?"disabled":""}>${r.joined?"Unido":"Unirme"}</button>`}</span></div>`).join("");
+ $$("#rides .btn").forEach(b=>b.onclick=()=>{const r=S.rides[+b.dataset.i];r.seats--;r.joined=true;
+  S.res.push({code:"SB-"+Math.floor(1000+Math.random()*9000),kind:"Carpooling con "+r.d,ruta:`${R[S.comuna].n} → ${dname()}`,t:r.t,seat:"—",tot:r.price,m:"Pago en la app"});drawRides();go("cupos")});
+}
+function drawHeat(){
+ const r=R[S.comuna],names=[...r.stops,dname()];
+ $("#hsub").textContent=`Ruta ${r.n} → ${dname()}: qué tan lleno va el bus en cada horario y tramo.`;
+ let avg=TIMES.map(()=>0);
+ let h='<table><tr><th></th>'+names.map(n=>`<th>${n.split(" ").slice(-1)[0].slice(0,10)}</th>`).join("")+"</tr>";
+ TIMES.forEach((t,ti)=>{h+=`<tr><th>${t}</th>`;names.forEach((n,i)=>{const o=occ(S.comuna,t,i);avg[ti]+=o/names.length;
+  const bg=o>=90?"hsl(12 85% 55%)":`hsl(${205+(o>60?10:0)} ${85-o*.05}% ${93-o*.62}%)`;
+  h+=`<td style="background:${bg};color:${o>50?'#fff':'#07324a'}" title="${n} ${t}: ${o}%">${o}%</td>`});h+="</tr>"});
+ $("#heat").innerHTML=h+"</table>";
+ const bi=avg.indexOf(Math.min(...avg));$("#best").textContent=`Tip: el bus de las ${TIMES[bi]} es el que va con más espacio (${Math.round(avg[bi])}% promedio).`;
+ $("#live").innerHTML=Object.keys(R).map((k,i)=>{const o=occ(k,TIMES[(S.n+i)%5],1);return `<div class="item" style="display:block"><div style="display:flex;justify-content:space-between"><b style="font-size:15px">Bus ${R[k].bus}-${12+i} · ${R[k].n}</b><span class="tag ${o>=90?'low':''}">${lvl(o)}</span></div><div class="bar"><i style="width:${o}%;background:${o>=90?'#f97316':'var(--sky)'}"></i></div><div class="meta"><span>${Math.round(o*.4)} de 40 asientos</span><span>${o}%</span></div></div>`}).join("");
+}
+function go(t){
+ $$("section").forEach(s=>s.hidden=s.id!=="t-"+t);
+ $$("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
+ if(t==="pago")$("#resumen").innerHTML=S.trip&&S.seat?`${R[S.comuna].n} → ${dname()}<br>Hoy ${S.trip} · Asiento ${S.seat}<br><b style="color:var(--ink)">Total ${money(BASE+EXTRA)}</b>`:"Elige horario y asiento en “Reservar” para continuar.";
+ if(t==="cupos")drawList();if(t==="carpool")drawRides();if(t==="ocup")drawHeat();
+ window.scrollTo(0,0);
+}
+function drawList(){
+ $("#lista").innerHTML=S.res.length?S.res.map((r,i)=>`<div class="card"><span class="ok">✔ Confirmado${r.kind?" · "+r.kind:""}</span>
+ <div class="ticket"><div class="code">${r.code}</div>${r.ruta}<br>Hoy ${r.t}${r.seat!=="—"?" · Asiento "+r.seat:""}<br><small>${money(r.tot)} · ${r.m}</small></div>
+ <button class="btn ghost" data-i="${i}">Cancelar</button></div>`).join(""):'<div class="card"><h2>Aún no tienes viajes</h2><p style="color:var(--mute);margin:0">Reserva un cupo o únete a un carpool.</p></div>';
+ $$("#lista .btn").forEach(b=>b.onclick=()=>{S.res.splice(+b.dataset.i,1);drawList()});
+}
+function refresh(){S.trip=null;S.seat=null;drawStops();drawTrips();drawSeats();upd()}
+function chips(){$("#qd").innerHTML=["UNAB","UCSC","Universidad de Concepción","Centro de Concepción"].map(d=>`<button class="chip ${S.dest===d?'on':''}" data-d="${d}">${d.replace("Universidad de Concepción","UdeC").replace("Centro de Concepción","Centro")}</button>`).join("");
+ $$("#qd .chip").forEach(c=>c.onclick=()=>{S.dest=c.dataset.d;$("#dest").value=S.dest;chips();refresh()})}
+$("#dest").oninput=e=>{S.dest=e.target.value;chips();refresh()};
+$("#comuna").onchange=e=>{S.comuna=e.target.value;S.stop=1;S.p=0;refresh();initRides()};
+$("#paradero").onchange=e=>{S.stop=+e.target.value;drawStops()};
+$$("nav button").forEach(b=>b.onclick=()=>go(b.dataset.t));
+$("#goReserva").onclick=()=>go("reserva");$("#goPago").onclick=()=>go("pago");
+$$("input[name=m]").forEach(r=>r.onchange=()=>{$("#cardf").hidden=document.querySelector("input[name=m]:checked").value!=="Tarjeta"});
+$("#cn").oninput=e=>e.target.value=e.target.value.replace(/\D/g,"").slice(0,16).replace(/(.{4})/g,"$1 ").trim();
+$("#pagar").onclick=()=>{
+ const m=document.querySelector("input[name=m]:checked").value,er=$("#perr");er.hidden=true;
+ if(!(S.trip&&S.seat)){er.textContent="Falta elegir horario y asiento en “Reservar”.";er.hidden=false;return}
+ if(m==="Tarjeta"&&($("#cn").value.replace(/\s/g,"").length<16||$("#ce").value.length<5||$("#cc").value.length<3)){er.textContent="Completa los datos de la tarjeta.";er.hidden=false;return}
+ const b=$("#pagar");b.disabled=true;b.textContent="Procesando pago…";
+ setTimeout(()=>{S.res.push({code:"SB-"+Math.floor(1000+Math.random()*9000),ruta:`${R[S.comuna].n} → ${dname()}`,t:S.trip,seat:S.seat,tot:BASE+EXTRA,m});
+  b.disabled=false;b.textContent="Pagar";S.trip=null;S.seat=null;drawTrips();drawSeats();upd();go("cupos")},1200)};
+$("#offer").onclick=()=>{if(!S.rides)initRides();S.rides.unshift({d:"Tú",car:"",t:$("#ot").value||"07:00",seats:+$("#os").value,price:+$("#op").value||0,mine:true});drawRides()};
+$("#wait").onclick=()=>{if($("#wn").value.trim()&&$("#ww").value.trim())$("#wok").hidden=false};
+chips();drawStops();drawTrips();drawSeats();upd();tick();setInterval(tick,500);
+</script>
+</body>
+</html>
